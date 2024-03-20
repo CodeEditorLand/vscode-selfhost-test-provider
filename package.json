@@ -1,103 +1,94 @@
 {
-  "name": "vscode-selfhost-test-provider",
-  "displayName": "VS Code Selfhost Test Provider",
-  "description": "Test provider for the VS Code project",
-  "enabledApiProposals": [
-    "testObserver",
-    "testCoverage"
-  ],
-  "contributes": {
-    "commands": [
-      {
-        "command": "selfhost-test-provider.updateSnapshot",
-        "title": "Update Snapshot",
-        "icon": "$(merge)"
-      }
-    ],
-    "menus": {
-      "commandPalette": [
-        {
-          "command": "selfhost-test-provider.updateSnapshot",
-          "when": "false"
-        }
-      ],
-      "testing/message/context": [
-        {
-          "command": "selfhost-test-provider.updateSnapshot",
-          "group": "inline@1",
-          "when": "testMessage == isSelfhostSnapshotMessage && !testResultOutdated"
-        }
-      ],
-      "testing/message/content": [
-        {
-          "command": "selfhost-test-provider.updateSnapshot",
-          "when": "testMessage == isSelfhostSnapshotMessage && !testResultOutdated"
-        }
-      ]
-    }
-  },
-  "icon": "icon.png",
-  "version": "0.3.26",
-  "publisher": "ms-vscode",
-  "engines": {
-    "vscode": "^1.86.0-20240105"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "workspaceContains:src/vs/loader.js"
-  ],
-  "workspaceTrust": {
-    "request": "onDemand",
-    "description": "Trust is required to execute tests in the workspace."
-  },
-  "main": "./dist/extension.js",
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "arrowParens": "avoid"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/microsoft/vscode-selfhost-test-provider.git"
-  },
-  "author": "Connor Peet <connor@peet.io>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/microsoft/vscode-selfhost-test-provider/issues"
-  },
-  "homepage": "https://github.com/microsoft/vscode-selfhost-test-provider#readme",
-  "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "webpack --config ./build/node-extension.webpack.config.js",
-    "watch": "webpack --watch --config ./build/node-extension.webpack.config.js",
-    "package": "webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
-    "fmt": "prettier --write \"src/**/*.ts\"&& npm run test -- --fix",
-    "test": "tsc --noEmit && eslint src --ext ts",
-    "postinstall": "vscode-dts main && vscode-dts dev"
-  },
-  "devDependencies": {
-    "@types/node": "^18.11.11",
-    "@types/split2": "^3.2.1",
-    "@typescript-eslint/eslint-plugin": "^5.45.1",
-    "@typescript-eslint/parser": "^5.45.1",
-    "eslint": "^8.29.0",
-    "eslint-plugin-header": "^3.1.1",
-    "prettier": "^2.8.1",
-    "ts-loader": "^9.4.2",
-    "vscode-debugprotocol": "^1.49.0",
-    "vscode-dts": "^0.3.3",
-    "webpack": "^5.76.0",
-    "webpack-cli": "^5.0.1"
-  },
-  "dependencies": {
-    "@jridgewell/trace-mapping": "^0.3.17",
-    "ansi-styles": "^6.2.1",
-    "istanbul-to-vscode": "^1.0.1",
-    "js-base64": "^3.7.3",
-    "split2": "^4.1.0",
-    "typescript": "^4.9.3"
-  }
+	"name": "vscode-selfhost-test-provider",
+	"displayName": "VS Code Selfhost Test Provider",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Test provider for the VS Code project",
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
+		"url": "https://playform.cloud"
+	},
+	"type": "module",
+	"main": "./dist/extension.js",
+	"scripts": {
+		"compile": "webpack --config ./build/node-extension.webpack.config.js",
+		"postinstall": "vscode-dts main && vscode-dts dev",
+		"package": "webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"vscode:prepublish": "npm run package",
+		"watch": "webpack --watch --config ./build/node-extension.webpack.config.js"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"command": "selfhost-test-provider.updateSnapshot",
+				"icon": "$(merge)",
+				"title": "Update Snapshot"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "selfhost-test-provider.updateSnapshot",
+					"when": "false"
+				}
+			],
+			"testing/message/content": [
+				{
+					"command": "selfhost-test-provider.updateSnapshot",
+					"when": "testMessage == isSelfhostSnapshotMessage && !testResultOutdated"
+				}
+			],
+			"testing/message/context": [
+				{
+					"command": "selfhost-test-provider.updateSnapshot",
+					"group": "inline@1",
+					"when": "testMessage == isSelfhostSnapshotMessage && !testResultOutdated"
+				}
+			]
+		}
+	},
+	"activationEvents": [
+		"workspaceContains:src/vs/loader.js"
+	],
+	"dependencies": {
+		"@jridgewell/trace-mapping": "^0.3.17",
+		"ansi-styles": "^6.2.1",
+		"istanbul-to-vscode": "^1.0.1",
+		"js-base64": "^3.7.3",
+		"split2": "^4.1.0",
+		"typescript": "^4.9.3"
+	},
+	"devDependencies": {
+		"@types/node": "^18.11.11",
+		"@types/split2": "^3.2.1",
+		"ts-loader": "^9.4.2",
+		"typescript-esbuild": "latest",
+		"vscode-debugprotocol": "^1.49.0",
+		"vscode-dts": "^0.3.3",
+		"webpack": "^5.76.0",
+		"webpack-cli": "^5.0.1"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"icon": "icon.png",
+	"enabledApiProposals": [
+		"testObserver",
+		"testCoverage"
+	],
+	"workspaceTrust": {
+		"description": "Trust is required to execute tests in the workspace.",
+		"request": "onDemand"
+	}
 }
