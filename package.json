@@ -73,7 +73,7 @@
 		"@types/node": "^18.11.11",
 		"@types/split2": "^3.2.1",
 		"ts-loader": "^9.4.2",
-		"typescript-esbuild": "latest",
+		"typescript-esbuild": "0.4.5",
 		"vscode-debugprotocol": "^1.49.0",
 		"vscode-dts": "^0.3.3",
 		"webpack": "^5.76.0",
