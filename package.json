@@ -1,32 +1,14 @@
 {
-	"name": "vscode-selfhost-test-provider",
-	"displayName": "VS Code Selfhost Test Provider",
-	"version": "0.0.1",
-	"private": false,
-	"description": "Test provider for the VS Code project",
-	"keywords": [
-		"land"
+	"activationEvents": [
+		"workspaceContains:src/vs/loader.js"
 	],
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandSelfhostTestProvider#readme",
-	"bugs": {
-		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandSelfhostTestProvider/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandSelfhostTestProvider.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
 	"author": {
-		"name": "🌆 — Land —",
 		"email": "Land@PlayForm.Cloud",
+		"name": "🌆 — Land —",
 		"url": "HTTPS://Land.PlayForm.Cloud"
 	},
-	"type": "module",
-	"main": "./dist/extension.js",
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"compile": "webpack --config ./build/node-extension.webpack.config.js",
-		"prepublishOnly": "Build 'Source/**/*.ts'"
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandSelfhostTestProvider/issues"
 	},
 	"contributes": {
 		"commands": [
@@ -58,15 +40,13 @@
 			]
 		}
 	},
-	"activationEvents": [
-		"workspaceContains:src/vs/loader.js"
-	],
 	"dependencies": {
 		"@jridgewell/trace-mapping": "0.3.25",
 		"ansi-styles": "6.2.1",
 		"js-base64": "3.7.7",
 		"split2": "4.2.0"
 	},
+	"description": "Test provider for the VS Code project",
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
@@ -74,13 +54,33 @@
 		"@types/split2": "4.2.3",
 		"ts-loader": "9.5.1"
 	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"icon": "icon.png",
+	"displayName": "VS Code Selfhost Test Provider",
 	"enabledApiProposals": [
 		"testObserver"
 	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandSelfhostTestProvider#readme",
+	"icon": "icon.png",
+	"keywords": [
+		"land"
+	],
+	"license": "SEE LICENSE IN LICENSE",
+	"main": "./dist/extension.js",
+	"name": "vscode-selfhost-test-provider",
+	"private": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandSelfhostTestProvider.git"
+	},
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"compile": "webpack --config ./build/node-extension.webpack.config.js",
+		"prepublishOnly": "Build 'Source/**/*.ts'"
+	},
+	"type": "module",
+	"version": "0.0.1",
 	"workspaceTrust": {
 		"description": "Trust is required to execute tests in the workspace.",
 		"request": "onDemand"
