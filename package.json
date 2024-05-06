@@ -70,7 +70,7 @@
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
-		"@types/node": "20.12.7",
+		"@types/node": "20.12.10",
 		"@types/split2": "4.2.3",
 		"ts-loader": "9.5.1"
 	},
