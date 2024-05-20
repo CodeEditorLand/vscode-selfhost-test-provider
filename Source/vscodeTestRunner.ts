@@ -232,12 +232,12 @@ export abstract class VSCodeTestRunner {
 }
 
 export class BrowserTestRunner extends VSCodeTestRunner {
-  
+  /** @override */
   protected binaryPath(): Promise<string> {
     return Promise.resolve(process.execPath);
   }
 
-  
+  /** @override */
   protected getEnvironment() {
     return {
       ...super.getEnvironment(),
@@ -245,40 +245,40 @@ export class BrowserTestRunner extends VSCodeTestRunner {
     };
   }
 
-  
+  /** @override */
   protected getDefaultArgs() {
     return [TEST_BROWSER_SCRIPT_PATH];
   }
 }
 
 export class WindowsTestRunner extends VSCodeTestRunner {
-  
+  /** @override */
   protected async binaryPath() {
     const { nameShort } = await this.readProductJson();
     return path.join(this.repoLocation.uri.fsPath, `.build/electron/${nameShort}.exe`);
   }
 
-  
+  /** @override */
   protected getDefaultArgs() {
     return [TEST_ELECTRON_SCRIPT_PATH];
   }
 }
 
 export class PosixTestRunner extends VSCodeTestRunner {
-  
+  /** @override */
   protected async binaryPath() {
     const { applicationName } = await this.readProductJson();
     return path.join(this.repoLocation.uri.fsPath, `.build/electron/${applicationName}`);
   }
 
-  
+  /** @override */
   protected getDefaultArgs() {
     return [TEST_ELECTRON_SCRIPT_PATH];
   }
 }
 
 export class DarwinTestRunner extends PosixTestRunner {
-  
+  /** @override */
   protected getDefaultArgs() {
     return [
       TEST_ELECTRON_SCRIPT_PATH,
@@ -288,7 +288,7 @@ export class DarwinTestRunner extends PosixTestRunner {
     ];
   }
 
-  
+  /** @override */
   protected async binaryPath() {
     const { nameLong } = await this.readProductJson();
     return path.join(
