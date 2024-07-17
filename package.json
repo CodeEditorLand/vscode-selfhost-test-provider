@@ -40,15 +40,15 @@
 		"workspaceContains:src/vs/loader.js"
 	],
 	"dependencies": {
-		"@jridgewell/trace-mapping": "^0.3.17",
-		"ansi-styles": "^6.2.1",
-		"js-base64": "^3.7.3",
-		"split2": "^4.1.0"
+		"@jridgewell/trace-mapping": "0.3.17",
+		"ansi-styles": "6.2.1",
+		"js-base64": "3.7.3",
+		"split2": "4.1.0"
 	},
 	"devDependencies": {
-		"@types/node": "^18.11.11",
-		"@types/split2": "^3.2.1",
-		"ts-loader": "^9.4.2"
+		"@types/node": "18.11.11",
+		"@types/split2": "3.2.1",
+		"ts-loader": "9.4.2"
 	},
 	"icon": "icon.png",
 	"enabledApiProposals": [
