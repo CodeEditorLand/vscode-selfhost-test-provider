@@ -1,7 +1,11 @@
 {
-	"activationEvents": [
-		"workspaceContains:src/vs/loader.js"
-	],
+	"name": "vscode-selfhost-test-provider",
+	"displayName": "VS Code Selfhost Test Provider",
+	"description": "Test provider for the VS Code project",
+	"main": "./dist/extension.js",
+	"scripts": {
+		"compile": "webpack --config ./build/node-extension.webpack.config.js"
+	},
 	"contributes": {
 		"commands": [
 			{
@@ -32,28 +36,24 @@
 			]
 		}
 	},
+	"activationEvents": [
+		"workspaceContains:src/vs/loader.js"
+	],
 	"dependencies": {
 		"@jridgewell/trace-mapping": "0.3.17",
 		"ansi-styles": "6.2.1",
 		"js-base64": "3.7.3",
 		"split2": "4.1.0"
 	},
-	"description": "Test provider for the VS Code project",
 	"devDependencies": {
 		"@types/node": "18.11.11",
 		"@types/split2": "3.2.1",
 		"ts-loader": "9.4.2"
 	},
-	"displayName": "VS Code Selfhost Test Provider",
+	"icon": "icon.png",
 	"enabledApiProposals": [
 		"testObserver"
 	],
-	"icon": "icon.png",
-	"main": "./dist/extension.js",
-	"name": "vscode-selfhost-test-provider",
-	"scripts": {
-		"compile": "webpack --config ./build/node-extension.webpack.config.js"
-	},
 	"workspaceTrust": {
 		"description": "Trust is required to execute tests in the workspace.",
 		"request": "onDemand"
