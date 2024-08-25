@@ -40,7 +40,7 @@
 	},
 	"description": "Test provider for the VS Code project",
 	"devDependencies": {
-		"@types/node": "22.4.0",
+		"@types/node": "22.5.0",
 		"@types/split2": "4.2.3",
 		"ts-loader": "9.5.1"
 	},
