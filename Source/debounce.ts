@@ -5,25 +5,28 @@
 /**
  * Debounces the function call for an interval.
  */
-export function debounce(duration: number, fn: () => void): (() => void) & { clear: () => void } {
-  let timeout: NodeJS.Timer | void;
-  const debounced = () => {
-    if (timeout !== undefined) {
-      clearTimeout(timeout);
-    }
+export function debounce(
+	duration: number,
+	fn: () => void,
+): (() => void) & { clear: () => void } {
+	let timeout: NodeJS.Timer | void;
+	const debounced = () => {
+		if (timeout !== undefined) {
+			clearTimeout(timeout);
+		}
 
-    timeout = setTimeout(() => {
-      timeout = undefined;
-      fn();
-    }, duration);
-  };
+		timeout = setTimeout(() => {
+			timeout = undefined;
+			fn();
+		}, duration);
+	};
 
-  debounced.clear = () => {
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = undefined;
-    }
-  };
+	debounced.clear = () => {
+		if (timeout) {
+			clearTimeout(timeout);
+			timeout = undefined;
+		}
+	};
 
-  return debounced;
+	return debounced;
 }
