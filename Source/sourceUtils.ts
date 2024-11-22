@@ -24,6 +24,7 @@ export const extractTestFromNode = (
 	}
 
 	let lhs = node.expression;
+
 	if (isSkipCall(lhs)) {
 		return Action.Skip;
 	}
@@ -33,7 +34,9 @@ export const extractTestFromNode = (
 	}
 
 	const name = node.arguments[0];
+
 	const func = node.arguments[1];
+
 	if (!name || !ts.isIdentifier(lhs) || !ts.isStringLiteralLike(name)) {
 		return Action.Recurse;
 	}
@@ -43,13 +46,16 @@ export const extractTestFromNode = (
 	}
 
 	const start = src.getLineAndCharacterOfPosition(name.pos);
+
 	const end = src.getLineAndCharacterOfPosition(func.end);
+
 	const range = new vscode.Range(
 		new vscode.Position(start.line, start.character),
 		new vscode.Position(end.line, end.character),
 	);
 
 	const cparent = parent instanceof TestConstruct ? parent : undefined;
+
 	if (lhs.escapedText === "test") {
 		return new TestCase(name.text, range, cparent);
 	}

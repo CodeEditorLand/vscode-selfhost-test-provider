@@ -10,6 +10,7 @@ export function debounce(
 	fn: () => void,
 ): (() => void) & { clear: () => void } {
 	let timeout: NodeJS.Timer | void;
+
 	const debounced = () => {
 		if (timeout !== undefined) {
 			clearTimeout(timeout);

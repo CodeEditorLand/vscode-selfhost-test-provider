@@ -41,12 +41,14 @@ export class FailingDeepStrictEqualAssertFixer {
 							document,
 							position,
 						);
+
 					if (!failingAssertion) {
 						return;
 					}
 
 					const expectedValueNode =
 						failingAssertion.assertion.expectedValue;
+
 					if (!expectedValueNode) {
 						return;
 					}
@@ -54,6 +56,7 @@ export class FailingDeepStrictEqualAssertFixer {
 					const start = document.positionAt(
 						expectedValueNode.getStart(),
 					);
+
 					const end = document.positionAt(expectedValueNode.getEnd());
 
 					const edit = new WorkspaceEdit();
@@ -75,6 +78,7 @@ export class FailingDeepStrictEqualAssertFixer {
 							document,
 							range.start,
 						);
+
 					if (!failingAssertion) {
 						return undefined;
 					}
@@ -115,7 +119,9 @@ const formatJsonValue = (value: unknown) => {
 		ts.ScriptTarget.ES5,
 		true,
 	);
+
 	const outerExpression = src.statements[0] as ts.ExpressionStatement;
+
 	const parenExpression =
 		outerExpression.expression as ts.ParenthesizedExpression;
 
@@ -159,14 +165,19 @@ function detectFailingDeepStrictEqualAssertion(
 	position: Position,
 ): { assertion: StrictEqualAssertion; actualJSONValue: unknown } | undefined {
 	const sf = parseSourceFile(document.getText());
+
 	const offset = document.offsetAt(position);
+
 	const assertion = StrictEqualAssertion.atPosition(sf, offset);
+
 	if (!assertion) {
 		return undefined;
 	}
 
 	const startLine = document.positionAt(assertion.offsetStart).line;
+
 	const messages = getAllTestStatusMessagesAt(document.uri, startLine);
+
 	const strictDeepEqualMessage = messages.find((m) =>
 		assertionFailureMessageRe.test(
 			typeof m.message === "string" ? m.message : m.message.value,
@@ -178,6 +189,7 @@ function detectFailingDeepStrictEqualAssertion(
 	}
 
 	const metadata = getTestMessageMetadata(strictDeepEqualMessage);
+
 	if (!metadata) {
 		return undefined;
 	}
@@ -198,6 +210,7 @@ class StrictEqualAssertion {
 		}
 
 		const expr = node.expression.getText();
+
 		if (
 			expr !== "assert.deepStrictEqual" &&
 			expr !== "assert.strictEqual"
@@ -219,6 +232,7 @@ class StrictEqualAssertion {
 
 		while (node.parent) {
 			const obj = StrictEqualAssertion.fromNode(node);
+
 			if (obj) {
 				return obj;
 			}
@@ -259,7 +273,9 @@ function getAllTestStatusMessagesAt(
 	}
 
 	const run = tests.testResults[0];
+
 	const snapshots = getTestResultsWithUri(run, uri);
+
 	const result: TestMessage[] = [];
 
 	for (const snapshot of snapshots) {

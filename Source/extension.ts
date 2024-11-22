@@ -46,6 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		"selfhost-test-controller",
 		"VS Code Tests",
 	);
+
 	const fileChangedEmitter = new vscode.EventEmitter<FileChangeEvent>();
 
 	ctrl.resolveHandler = async (test) => {
@@ -53,10 +54,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			context.subscriptions.push(
 				await startWatchingWorkspace(ctrl, fileChangedEmitter),
 			);
+
 			return;
 		}
 
 		const data = itemData.get(test);
+
 		if (data instanceof TestFile) {
 			// No need to watch this, updates will be triggered on file changes
 			// either by the text document or file watcher.
@@ -74,22 +77,28 @@ export async function activate(context: vscode.ExtensionContext) {
 			cancellationToken: vscode.CancellationToken,
 		) => {
 			const folder = await guessWorkspaceFolder();
+
 			if (!folder) {
 				return;
 			}
 
 			const runner = new runnerCtor(folder);
+
 			const map = await getPendingTestMap(
 				ctrl,
 				req.include ?? gatherTestItems(ctrl.items),
 			);
+
 			const task = ctrl.createTestRun(req);
+
 			for (const test of map.values()) {
 				task.enqueued(test);
 			}
 
 			let coverageDir: string | undefined;
+
 			let currentArgs = args;
+
 			if (kind === vscode.TestRunProfileKind.Coverage) {
 				coverageDir = path.join(
 					tmpdir(),
@@ -127,6 +136,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			}
 
 			const queuedFiles = new Set<string>();
+
 			let debounced: NodeJS.Timer | undefined;
 
 			const listener = fileChangedEmitter.event(({ uri, removed }) => {
@@ -242,7 +252,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	function updateNodeForDocument(e: vscode.TextDocument) {
 		const node = getOrCreateFile(ctrl, e.uri);
+
 		const data = node && itemData.get(node);
+
 		if (data instanceof TestFile) {
 			data.updateFromContents(ctrl, e.getText(), node!);
 		}
@@ -257,6 +269,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		fileChangedEmitter.event(({ uri, removed }) => {
 			if (!removed) {
 				const node = getOrCreateFile(ctrl, uri);
+
 				if (node) {
 					ctrl.invalidateTestResults();
 				}
@@ -280,12 +293,15 @@ function getOrCreateFile(
 	uri: vscode.Uri,
 ): vscode.TestItem | undefined {
 	const folder = getWorkspaceFolderForTestFile(uri);
+
 	if (!folder) {
 		return undefined;
 	}
 
 	const data = new TestFile(uri, folder);
+
 	const existing = controller.items.get(data.getId());
+
 	if (existing) {
 		return existing;
 	}
@@ -301,6 +317,7 @@ function getOrCreateFile(
 function gatherTestItems(collection: vscode.TestItemCollection) {
 	const items: vscode.TestItem[] = [];
 	collection.forEach((item) => items.push(item));
+
 	return items;
 }
 
@@ -309,6 +326,7 @@ async function startWatchingWorkspace(
 	fileChangedEmitter: vscode.EventEmitter<FileChangeEvent>,
 ) {
 	const workspaceFolder = await guessWorkspaceFolder();
+
 	if (!workspaceFolder) {
 		return new vscode.Disposable(() => undefined);
 	}
@@ -317,6 +335,7 @@ async function startWatchingWorkspace(
 		workspaceFolder,
 		TEST_FILE_PATTERN,
 	);
+
 	const watcher = vscode.workspace.createFileSystemWatcher(pattern);
 
 	watcher.onDidCreate((uri) => {
@@ -344,10 +363,13 @@ async function getPendingTestMap(
 	tests: Iterable<vscode.TestItem>,
 ) {
 	const queue = [tests];
+
 	const titleMap = new Map<string, vscode.TestItem>();
+
 	while (queue.length) {
 		for (const item of queue.pop()!) {
 			const data = itemData.get(item);
+
 			if (data instanceof TestFile) {
 				if (!data.hasBeenRead) {
 					await data.updateFromDisk(ctrl, item);

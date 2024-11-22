@@ -18,9 +18,11 @@ import { itemData, TestCase, TestFile, TestSuite } from "./testTree";
 const escapeRe = (s: string) => s.replace(/[.*+\-?^${}()|[\]\\]/g, "\\$&");
 
 const TEST_ELECTRON_SCRIPT_PATH = "test/unit/electron/index.js";
+
 const TEST_BROWSER_SCRIPT_PATH = "test/unit/browser/index.js";
 
 const ATTACH_CONFIG_NAME = "Attach to VS Code";
+
 const DEBUG_TYPE = "pwa-chrome";
 
 export abstract class VSCodeTestRunner {
@@ -31,6 +33,7 @@ export abstract class VSCodeTestRunner {
 		filter?: ReadonlyArray<vscode.TestItem>,
 	) {
 		const args = this.prepareArguments(baseArgs, filter);
+
 		const cp = spawn(await this.binaryPath(), args, {
 			cwd: this.repoLocation.uri.fsPath,
 			stdio: "pipe",
@@ -45,6 +48,7 @@ export abstract class VSCodeTestRunner {
 		filter?: ReadonlyArray<vscode.TestItem>,
 	) {
 		const port = await this.findOpenPort();
+
 		const baseConfiguration = vscode.workspace
 			.getConfiguration("launch", this.repoLocation)
 			.get<vscode.DebugConfiguration[]>("configurations", [])
@@ -57,6 +61,7 @@ export abstract class VSCodeTestRunner {
 		}
 
 		const server = this.createWaitServer();
+
 		const args = [
 			...this.prepareArguments(baseArgs, filter),
 			`--remote-debugging-port=${port}`,
@@ -121,6 +126,7 @@ export abstract class VSCodeTestRunner {
 		});
 
 		let exited = false;
+
 		let rootSession: vscode.DebugSession | undefined;
 		cp.once("exit", () => {
 			exited = true;
@@ -151,6 +157,7 @@ export abstract class VSCodeTestRunner {
 			const server = createServer();
 			server.listen(0, () => {
 				const address = server.address() as AddressInfo;
+
 				const port = address.port;
 				server.close(() => {
 					resolve(port);
@@ -180,12 +187,15 @@ export abstract class VSCodeTestRunner {
 			"--reporter",
 			"full-json-stream",
 		];
+
 		if (!filter) {
 			return args;
 		}
 
 		const grepRe: string[] = [];
+
 		const runPaths = new Set<string>();
+
 		const addTestFileRunPath = (data: TestFile) =>
 			runPaths.add(
 				path
@@ -195,13 +205,16 @@ export abstract class VSCodeTestRunner {
 
 		for (const test of filter) {
 			const data = itemData.get(test);
+
 			if (data instanceof TestCase || data instanceof TestSuite) {
 				grepRe.push(
 					escapeRe(data.fullName) +
 						(data instanceof TestCase ? "$" : " "),
 				);
+
 				for (let p = test.parent; p; p = p.parent) {
 					const parentData = itemData.get(p);
+
 					if (parentData instanceof TestFile) {
 						addTestFileRunPath(parentData);
 					}
@@ -231,6 +244,7 @@ export abstract class VSCodeTestRunner {
 			path.join(this.repoLocation.uri.fsPath, "product.json"),
 			"utf-8",
 		);
+
 		try {
 			return JSON.parse(projectJson);
 		} catch (e) {
@@ -242,6 +256,7 @@ export abstract class VSCodeTestRunner {
 
 	private createWaitServer() {
 		const onReady = new vscode.EventEmitter<void>();
+
 		let ready = false;
 
 		const server = createServer((socket) => {
@@ -291,6 +306,7 @@ export class WindowsTestRunner extends VSCodeTestRunner {
 	/** @override */
 	protected async binaryPath() {
 		const { nameShort } = await this.readProductJson();
+
 		return path.join(
 			this.repoLocation.uri.fsPath,
 			`.build/electron/${nameShort}.exe`,
@@ -307,6 +323,7 @@ export class PosixTestRunner extends VSCodeTestRunner {
 	/** @override */
 	protected async binaryPath() {
 		const { applicationName } = await this.readProductJson();
+
 		return path.join(
 			this.repoLocation.uri.fsPath,
 			`.build/electron/${applicationName}`,
@@ -333,6 +350,7 @@ export class DarwinTestRunner extends PosixTestRunner {
 	/** @override */
 	protected async binaryPath() {
 		const { nameLong } = await this.readProductJson();
+
 		return path.join(
 			this.repoLocation.uri.fsPath,
 			`.build/electron/${nameLong}.app/Contents/MacOS/Electron`,

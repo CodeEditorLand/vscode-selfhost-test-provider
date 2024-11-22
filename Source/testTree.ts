@@ -10,6 +10,7 @@ import * as vscode from "vscode";
 import { Action, extractTestFromNode } from "./sourceUtils";
 
 const textDecoder = new TextDecoder("utf-8");
+
 const diagnosticCollection = vscode.languages.createDiagnosticCollection(
 	"selfhostTestProvider",
 );
@@ -38,6 +39,7 @@ export const guessWorkspaceFolder = async () => {
 			await vscode.workspace.fs.stat(
 				vscode.Uri.joinPath(folder.uri, "src/vs/loader.js"),
 			);
+
 			return folder;
 		} catch {
 			// ignored
@@ -50,9 +52,11 @@ export const guessWorkspaceFolder = async () => {
 export const getContentFromFilesystem: ContentGetter = async (uri) => {
 	try {
 		const rawContent = await vscode.workspace.fs.readFile(uri);
+
 		return textDecoder.decode(rawContent);
 	} catch (e) {
 		console.warn(`Error providing tests for ${uri.fsPath}`, e);
+
 		return "";
 	}
 };
@@ -99,6 +103,7 @@ export class TestFile {
 	) {
 		try {
 			const diagnostics: vscode.Diagnostic[] = [];
+
 			const ast = ts.createSourceFile(
 				this.uri.path.split("/").pop()!,
 				content,
@@ -111,19 +116,23 @@ export class TestFile {
 				item: vscode.TestItem;
 				children: vscode.TestItem[];
 			}[] = [{ item: file, children: [] }];
+
 			const traverse = (node: ts.Node) => {
 				const parent = parents[parents.length - 1];
+
 				const childData = extractTestFromNode(
 					ast,
 					node,
 					itemData.get(parent.item)!,
 				);
+
 				if (childData === Action.Skip) {
 					return;
 				}
 
 				if (childData === Action.Recurse) {
 					ts.forEachChild(node, traverse);
+
 					return;
 				}
 
@@ -132,6 +141,7 @@ export class TestFile {
 				// Skip duplicated tests. They won't run correctly with the way
 				// mocha reports them, and will error if we try to insert them.
 				const existing = parent.children.find((c) => c.id === id);
+
 				if (existing) {
 					const diagnostic = new vscode.Diagnostic(
 						childData.range,
@@ -147,6 +157,7 @@ export class TestFile {
 					];
 
 					diagnostics.push(diagnostic);
+
 					return;
 				}
 

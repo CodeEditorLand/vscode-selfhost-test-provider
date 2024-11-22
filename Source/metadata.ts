@@ -23,8 +23,10 @@ export function attachTestMessageMetadata(
 	metadata: TestMessageMetadata,
 ): void {
 	const existingMetadata = getTestMessageMetadata(message);
+
 	if (existingMetadata) {
 		Object.assign(existingMetadata, metadata);
+
 		return;
 	}
 
@@ -37,6 +39,7 @@ export function attachTestMessageMetadata(
 	}
 
 	cache.push({ id, metadata });
+
 	while (cache.length > 100) {
 		cache.shift();
 	}
@@ -46,6 +49,7 @@ export function getTestMessageMetadata(
 	message: TestMessage,
 ): TestMessageMetadata | undefined {
 	let value: string;
+
 	if (typeof message.message === "string") {
 		value = message.message;
 	} else {
@@ -53,10 +57,12 @@ export function getTestMessageMetadata(
 	}
 
 	const result = regexp.exec(value);
+
 	if (!result) {
 		return undefined;
 	}
 
 	const id = result[0];
+
 	return cache.find((c) => c.id === id)?.metadata;
 }

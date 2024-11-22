@@ -12,7 +12,9 @@ export const registerSnapshotUpdate = (ctrl: vscode.TestController) =>
 		"selfhost-test-provider.updateSnapshot",
 		async (args) => {
 			const message: vscode.TestMessage = args.message;
+
 			const index = message.expectedOutput?.indexOf(snapshotComment);
+
 			if (
 				!message.expectedOutput ||
 				!message.actualOutput ||
@@ -22,6 +24,7 @@ export const registerSnapshotUpdate = (ctrl: vscode.TestController) =>
 				vscode.window.showErrorMessage(
 					"Could not find snapshot comment in message",
 				);
+
 				return;
 			}
 
