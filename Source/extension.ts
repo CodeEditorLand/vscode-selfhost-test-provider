@@ -104,6 +104,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					tmpdir(),
 					`vscode-test-coverage-${randomBytes(8).toString("hex")}`,
 				);
+
 				currentArgs = [
 					...currentArgs,
 					"--coverage",
@@ -167,6 +168,7 @@ export async function activate(context: vscode.ExtensionContext) {
 								getOrCreateFile(ctrl, vscode.Uri.parse(f)),
 							)
 							.filter((f): f is vscode.TestItem => !!f);
+
 					queuedFiles.clear();
 
 					doTestRun(
@@ -183,6 +185,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 			cancellationToken.onCancellationRequested(() => {
 				clearTimeout(debounced);
+
 				listener.dispose();
 			});
 		};
@@ -307,8 +310,11 @@ function getOrCreateFile(
 	}
 
 	const file = controller.createTestItem(data.getId(), data.getLabel(), uri);
+
 	controller.items.add(file);
+
 	file.canResolveChildren = true;
+
 	itemData.set(file, data);
 
 	return file;
@@ -316,6 +322,7 @@ function getOrCreateFile(
 
 function gatherTestItems(collection: vscode.TestItemCollection) {
 	const items: vscode.TestItem[] = [];
+
 	collection.forEach((item) => items.push(item));
 
 	return items;
@@ -340,14 +347,19 @@ async function startWatchingWorkspace(
 
 	watcher.onDidCreate((uri) => {
 		getOrCreateFile(controller, uri);
+
 		fileChangedEmitter.fire({ removed: false, uri });
 	});
+
 	watcher.onDidChange((uri) =>
 		fileChangedEmitter.fire({ removed: false, uri }),
 	);
+
 	watcher.onDidDelete((uri) => {
 		fileChangedEmitter.fire({ removed: true, uri });
+
 		clearFileDiagnostics(uri);
+
 		controller.items.delete(uri.toString());
 	});
 
@@ -374,6 +386,7 @@ async function getPendingTestMap(
 				if (!data.hasBeenRead) {
 					await data.updateFromDisk(ctrl, item);
 				}
+
 				queue.push(gatherTestItems(item.children));
 			} else if (data instanceof TestCase) {
 				titleMap.set(data.fullName, item);

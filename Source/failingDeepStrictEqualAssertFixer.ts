@@ -60,11 +60,13 @@ export class FailingDeepStrictEqualAssertFixer {
 					const end = document.positionAt(expectedValueNode.getEnd());
 
 					const edit = new WorkspaceEdit();
+
 					edit.replace(
 						uri,
 						new Range(start, end),
 						formatJsonValue(failingAssertion.actualJSONValue),
 					);
+
 					await workspace.applyEdit(edit);
 				},
 			),
@@ -236,6 +238,7 @@ class StrictEqualAssertion {
 			if (obj) {
 				return obj;
 			}
+
 			node = node.parent;
 		}
 
@@ -261,6 +264,7 @@ function findNodeAt(parent: ts.Node, offset: number): ts.Node {
 			return findNodeAt(child, offset);
 		}
 	}
+
 	return parent;
 }
 
@@ -303,6 +307,7 @@ function getTestResultsWithUri(
 		for (const c of r.children) {
 			walk(c);
 		}
+
 		if (r.uri?.toString() === uri.toString()) {
 			results.push(r);
 		}

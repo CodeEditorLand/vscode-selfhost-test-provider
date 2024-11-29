@@ -128,10 +128,14 @@ export abstract class VSCodeTestRunner {
 		let exited = false;
 
 		let rootSession: vscode.DebugSession | undefined;
+
 		cp.once("exit", () => {
 			exited = true;
+
 			server.dispose();
+
 			listener.dispose();
+
 			factory.dispose();
 
 			if (rootSession) {
@@ -155,14 +159,17 @@ export abstract class VSCodeTestRunner {
 	private findOpenPort(): Promise<number> {
 		return new Promise((resolve, reject) => {
 			const server = createServer();
+
 			server.listen(0, () => {
 				const address = server.address() as AddressInfo;
 
 				const port = address.port;
+
 				server.close(() => {
 					resolve(port);
 				});
 			});
+
 			server.on("error", (error: Error) => {
 				reject(error);
 			});
@@ -273,6 +280,7 @@ export abstract class VSCodeTestRunner {
 			port: (server.address() as AddressInfo).port,
 			ready: () => {
 				ready = true;
+
 				onReady.fire();
 			},
 			dispose: () => {

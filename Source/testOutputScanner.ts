@@ -33,9 +33,13 @@ export interface IStartEvent {
 
 export interface ITestStartEvent {
 	title: string;
+
 	fullTitle: string;
+
 	file: string;
+
 	currentRetry: number;
+
 	speed: string;
 }
 
@@ -45,21 +49,33 @@ export interface IPassEvent extends ITestStartEvent {
 
 export interface IFailEvent extends IPassEvent {
 	err: string;
+
 	stack: string | null;
+
 	expected?: string;
+
 	actual?: string;
+
 	expectedJSON?: unknown;
+
 	actualJSON?: unknown;
+
 	snapshotPath?: string;
 }
 
 export interface IEndEvent {
 	suites: number;
+
 	tests: number;
+
 	passes: number;
+
 	pending: number;
+
 	failures: number;
+
 	start: string /* ISO date */;
+
 	end: string /* ISO date */;
 }
 
@@ -72,7 +88,9 @@ export type MochaEventTuple =
 
 export class TestOutputScanner implements vscode.Disposable {
 	protected mochaEventEmitter = new vscode.EventEmitter<MochaEventTuple>();
+
 	protected outputEventEmitter = new vscode.EventEmitter<string>();
+
 	protected onExitEmitter = new vscode.EventEmitter<string | undefined>();
 
 	/**
@@ -95,8 +113,11 @@ export class TestOutputScanner implements vscode.Disposable {
 		private args?: string[],
 	) {
 		process.stdout.pipe(split()).on("data", this.processData);
+
 		process.stderr.pipe(split()).on("data", this.processData);
+
 		process.on("error", (e) => this.onExitEmitter.fire(e.message));
+
 		process.on("exit", (code) =>
 			this.onExitEmitter.fire(
 				code ? `Test process exited with code ${code}` : undefined,
@@ -120,6 +141,7 @@ export class TestOutputScanner implements vscode.Disposable {
 			this.outputEventEmitter.fire(
 				`./scripts/test ${this.args.join(" ")}`,
 			);
+
 			this.args = undefined;
 		}
 
@@ -164,12 +186,15 @@ export async function scanTestOutput(
 		fn: QueuedOutput | (() => Promise<QueuedOutput>),
 	) => {
 		exitBlockers.delete(outputQueue);
+
 		outputQueue = outputQueue.finally(async () => {
 			const r = typeof fn === "function" ? await fn() : fn;
+
 			typeof r === "string"
 				? task.appendOutput(r)
 				: task.appendOutput(...r);
 		});
+
 		exitBlockers.add(outputQueue);
 
 		return outputQueue;
@@ -177,6 +202,7 @@ export async function scanTestOutput(
 
 	const enqueueExitBlocker = <T>(prom: Promise<T>): Promise<T> => {
 		exitBlockers.add(prom);
+
 		prom.finally(() => exitBlockers.delete(prom));
 
 		return prom;
@@ -202,6 +228,7 @@ export async function scanTestOutput(
 				if (err) {
 					enqueueOutput(err + crlf);
 				}
+
 				resolve();
 			});
 
@@ -248,8 +275,11 @@ export async function scanTestOutput(
 
 							return;
 						}
+
 						skippedTests.delete(currentTest);
+
 						task.started(currentTest);
+
 						ranAnyTest = true;
 
 						break;
@@ -259,16 +289,20 @@ export async function scanTestOutput(
 							const title = evt[1].fullTitle;
 
 							const tcase = tests.get(title);
+
 							enqueueOutput(
 								` ${styles.green.open}√${styles.green.close} ${title}\r\n`,
 							);
 
 							if (tcase) {
 								lastTest = tcase;
+
 								task.passed(tcase, evt[1].duration);
+
 								tests.delete(title);
 							}
 						}
+
 						break;
 
 					case MochaEvent.Fail:
@@ -354,14 +388,17 @@ export async function scanTestOutput(
 										message = new vscode.TestMessage(
 											tryMakeMarkdown(err),
 										);
+
 										message.actualOutput =
 											outputToString(actual);
+
 										message.expectedOutput =
 											outputToString(expected);
 
 										if (snapshotPath) {
 											message.contextValue =
 												"isSelfhostSnapshotMessage";
+
 											message.expectedOutput +=
 												snapshotComment + snapshotPath;
 										}
@@ -383,10 +420,12 @@ export async function scanTestOutput(
 
 									message.location =
 										location ?? testFirstLine;
+
 									task.failed(tcase!, message, duration);
 								})(),
 							);
 						}
+
 						break;
 
 					case MochaEvent.End:
@@ -411,6 +450,7 @@ export async function scanTestOutput(
 				});
 			} catch (e) {
 				const msg = `Error loading coverage:\n\n${e}\n`;
+
 				task.appendOutput(msg.replace(/\n/g, crlf));
 			}
 		}
@@ -429,6 +469,7 @@ export async function scanTestOutput(
 		for (const test of skippedTests) {
 			task.skipped(test);
 		}
+
 		task.end();
 	}
 }
@@ -449,6 +490,7 @@ const sourcemapStack = async (store: SourceMapStore, str: string) => {
 			if (!location) {
 				return;
 			}
+
 			return {
 				from: match[0],
 				to: location?.uri.with({
@@ -482,6 +524,7 @@ const tryMakeMarkdown = (message: string) => {
 	}
 
 	lines.splice(start, 1, "```diff");
+
 	lines.push("```");
 
 	return new vscode.MarkdownString(lines.join("\n"));
@@ -683,6 +726,7 @@ async function tryDeriveStackLocation(
 								score = 2;
 							}
 						}
+
 						if (
 							!best ||
 							score > best.score ||

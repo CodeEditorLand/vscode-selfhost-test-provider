@@ -31,7 +31,9 @@ export const registerSnapshotUpdate = (ctrl: vscode.TestController) =>
 			const file = message.expectedOutput.slice(
 				index + snapshotComment.length,
 			);
+
 			await fs.writeFile(file, message.actualOutput);
+
 			ctrl.invalidateTestResults(args.test);
 		},
 	);

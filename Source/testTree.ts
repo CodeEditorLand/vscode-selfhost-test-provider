@@ -86,7 +86,9 @@ export class TestFile {
 	) {
 		try {
 			const content = await getContentFromFilesystem(item.uri!);
+
 			item.error = undefined;
+
 			this.updateFromContents(controller, content, item);
 		} catch (e) {
 			item.error = (e as Error).stack;
@@ -114,6 +116,7 @@ export class TestFile {
 
 			const parents: {
 				item: vscode.TestItem;
+
 				children: vscode.TestItem[];
 			}[] = [{ item: file, children: [] }];
 
@@ -166,24 +169,33 @@ export class TestFile {
 					childData.name,
 					file.uri,
 				);
+
 				itemData.set(item, childData);
+
 				item.range = childData.range;
+
 				parent.children.push(item);
 
 				if (childData instanceof TestSuite) {
 					parents.push({ item: item, children: [] });
+
 					ts.forEachChild(node, traverse);
+
 					item.children.replace(parents.pop()!.children);
 				}
 			};
 
 			ts.forEachChild(ast, traverse);
+
 			file.error = undefined;
+
 			file.children.replace(parents[0].children);
+
 			diagnosticCollection.set(
 				this.uri,
 				diagnostics.length ? diagnostics : undefined,
 			);
+
 			this.hasBeenRead = true;
 		} catch (e) {
 			file.error = String((e as Error).stack || (e as Error).message);

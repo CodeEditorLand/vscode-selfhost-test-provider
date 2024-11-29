@@ -5,6 +5,7 @@ import { TestMessage } from "vscode";
 
 export interface TestMessageMetadata {
 	expectedValue: unknown;
+
 	actualValue: unknown;
 }
 

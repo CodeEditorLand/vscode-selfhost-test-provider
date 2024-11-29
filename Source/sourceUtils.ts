@@ -71,6 +71,7 @@ const isPropertyCall = (
 	lhs: ts.LeftHandSideExpression,
 ): lhs is ts.PropertyAccessExpression & {
 	expression: ts.Identifier;
+
 	name: ts.Identifier;
 } =>
 	ts.isPropertyAccessExpression(lhs) &&

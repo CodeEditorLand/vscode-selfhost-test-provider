@@ -18,6 +18,7 @@ export function debounce(
 
 		timeout = setTimeout(() => {
 			timeout = undefined;
+
 			fn();
 		}, duration);
 	};
@@ -25,6 +26,7 @@ export function debounce(
 	debounced.clear = () => {
 		if (timeout) {
 			clearTimeout(timeout);
+
 			timeout = undefined;
 		}
 	};

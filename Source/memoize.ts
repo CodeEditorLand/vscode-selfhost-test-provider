@@ -11,6 +11,7 @@ export const memoizeLast = <A, T>(fn: (args: A) => T): ((args: A) => T) => {
 		}
 
 		const result = fn(arg);
+
 		last = { arg, result };
 
 		return result;
