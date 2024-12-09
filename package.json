@@ -50,7 +50,7 @@
 	],
 	"icon": "icon.png",
 	"main": "./dist/extension.js",
-	"name": "vscode-selfhost-test-provider",
+	"name": "@codeeditorland/selfhost-test-provider",
 	"scripts": {
 		"compile": "webpack --config ./build/node-extension.webpack.config.js"
 	},
